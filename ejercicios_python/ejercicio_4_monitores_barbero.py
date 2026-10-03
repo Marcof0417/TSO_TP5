@@ -109,8 +109,8 @@ class BarberiaMonitor:
             
             # 7. Retornar True
             return True          
-            pass
-            return False
+           # pass
+           # return False
 
     def atender_siguiente_cliente(self):
         """
@@ -126,23 +126,19 @@ class BarberiaMonitor:
             # 3. Si hay un cliente listo en el sillón, retornar True.
             # =====================================================================
             # 1. Mientras no haya un cliente listo en el sillón y la barbería siga abierta:
-            while not self.cliente_listo_en_sillon and self.barberia_abierta:
-                # Si hay clientes esperando en la sala, invitar al siguiente a pasar:
+            while not self.cliente_listo_en_sillon:
+                # 2. Si la barbería cerró y no quedan clientes
+                if not self.barberia_abierta and self.clientes_esperando == 0:
+                    print("🔒 [Barbero] Barbería cerrada y sin clientes. Finalizando jornada.")
+                    return False
+                # Invitar al siguiente cliente si hay
                 if self.clientes_esperando > 0 and not self.silla_barbero_ocupada:
                     self.cond_sala_espera.notify()
                 else:
                     print("😴 [Barbero] No hay clientes listos. Durmiendo...")
                 self.cond_barbero.wait()
-                
-            # 2. Si la barbería cerró y no quedan clientes:
-            if not self.barberia_abierta and self.clientes_esperando == 0 and not self.cliente_listo_en_sillon:
-                print("🔒 [Barbero] Barbería cerrada y sin clientes. Finalizando jornada.")
-                return False
-                
-            # 3. Si hay un cliente listo en el sillón:
-            return True
-            pass
-            return False
+            return True   
+          
 
     # Alias pedagógico
     esperar_cliente_para_corte = atender_siguiente_cliente
